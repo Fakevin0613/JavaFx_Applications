@@ -11,6 +11,7 @@ import javafx.scene.control.Label
 import javafx.scene.control.TextArea
 import javafx.scene.layout.*
 import javafx.scene.paint.Color
+import java.util.*
 
 class LView(subtract: DoubleBinding) : VBox(), InvalidationListener {
     var size = subtract
@@ -20,10 +21,10 @@ class LView(subtract: DoubleBinding) : VBox(), InvalidationListener {
     }
 
     override fun invalidated(observable: Observable?) {
-        var notes = Model.getNotes()
+        var notes : List<Pair<String, Boolean>> = Model.getNotes()
 
         children.clear()
-
+// input note
         val listSpecial = HBox()
         listSpecial.apply {
             style = "-fx-pref-height: 62"
@@ -58,35 +59,46 @@ class LView(subtract: DoubleBinding) : VBox(), InvalidationListener {
         listSpecial.children.addAll(inputBox, buttonBox)
 
         children.add(listSpecial)
-
+// notes
+        var count = 0
         for (note in notes) {
-            var tempNote = HBox()
-            tempNote.apply {
-                padding = Insets(10.0)
-                background = Background(
-                    BackgroundFill(
-                        if (note.second)  Color.LIGHTGRAY else Color.LIGHTYELLOW,
-                        CornerRadii(10.0),
-                        Insets(5.0, 10.0, 5.0, 10.0)
-                    )
-                )
+            var index = count
+            count++
+            if(!Model.getShowArchived() && note.second){
+
             }
+            else {
+                var tempNote = HBox()
+                tempNote.apply {
+                    padding = Insets(10.0)
+                    background = Background(
+                        BackgroundFill(
+                            if (note.second)  Color.LIGHTGRAY else Color.LIGHTYELLOW,
+                            CornerRadii(10.0),
+                            Insets(5.0, 10.0, 5.0, 10.0)
+                        )
+                    )
+                }
 
-            var archivedOrNot = CheckBox("Archived")
-            archivedOrNot.padding = Insets(10.0)
-            archivedOrNot.isSelected = note.second
-            HBox.setHgrow(archivedOrNot, Priority.NEVER)
+                var archivedOrNot = CheckBox("Archived")
+                archivedOrNot.padding = Insets(10.0)
+                archivedOrNot.isSelected = note.second
+                archivedOrNot.selectedProperty().addListener { _, _, newValue ->
+                    Model.changeArchived(index, Pair(note.first, newValue))
+                }
+                HBox.setHgrow(archivedOrNot, Priority.NEVER)
 
-            var content = Label(note.first)
-            content.isWrapText = true
-            content.prefWidthProperty().bind(size)
-            content.padding = Insets(10.0)
-            HBox.setHgrow(content, Priority.ALWAYS)
+                var content = Label(note.first)
+                content.isWrapText = true
+                content.prefWidthProperty().bind(size)
+                content.padding = Insets(10.0)
+                HBox.setHgrow(content, Priority.ALWAYS)
 
 
-            tempNote.children.addAll(content,
-                archivedOrNot)
-            children.add(tempNote)
+                tempNote.children.addAll(content,
+                    archivedOrNot)
+                children.add(tempNote)
+            }
 
         }
     }

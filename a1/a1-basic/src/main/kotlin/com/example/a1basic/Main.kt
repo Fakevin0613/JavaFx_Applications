@@ -18,14 +18,6 @@ class Main : Application() {
 
     override fun start(stage: Stage) {
 
-//        var notes : MutableList<Pair<String, Boolean>> = mutableListOf()
-//        notes.add(Pair("Note Simple", false))
-//        notes.add(Pair("Notelonggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg" +
-//                "ggggggggggggggggggggggggggggggggggggggggggggggggg", false))
-//        notes.add(Pair("Note Archived", true))
-//        notes.add(Pair("Note high \na\na\na\na\na\na\na\n", false))
-
-
 // toolbar area
         val toolText1 = Text("Views:")
         val buttonList = Button("List")
@@ -38,14 +30,22 @@ class Main : Application() {
         }
         val divider1 = Separator()
 
-//        val toolTextArchive = Text("Show archived:")
+
         val buttonArchive = CheckBox("Show archived:")
+        buttonArchive.isSelected = Model.getShowArchived()
+        buttonArchive.selectedProperty().addListener { _, _, newValue ->
+            Model.changeShowArchived(newValue)
+        }
         buttonArchive.nodeOrientation = NodeOrientation.RIGHT_TO_LEFT;
         val divider2 = Separator()
 
         val toolTextOrder = Text("Order by:")
         val orderChoice = ChoiceBox(FXCollections.observableArrayList("Length (asc)", "Length (desc)"))
         orderChoice.selectionModel.select(0)
+        orderChoice.selectionModel.selectedItemProperty().addListener { _, _, newValue ->
+            Model.changeAscend(newValue)
+        }
+
         val buttonClear = Button("Clear")
         buttonClear.apply {
             style = "-fx-pref-width: 50"
