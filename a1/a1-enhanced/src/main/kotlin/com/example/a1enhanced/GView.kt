@@ -1,16 +1,21 @@
-package com.example.a1basic
+package com.example.a1enhanced
 
 import javafx.beans.InvalidationListener
 import javafx.beans.Observable
 import javafx.beans.binding.DoubleBinding
 import javafx.event.EventHandler
 import javafx.geometry.Insets
+import javafx.geometry.Pos
 import javafx.scene.control.Button
 import javafx.scene.control.CheckBox
 import javafx.scene.control.Label
 import javafx.scene.control.TextArea
+import javafx.scene.input.TransferMode
 import javafx.scene.layout.*
 import javafx.scene.paint.Color
+import java.nio.charset.StandardCharsets
+import java.nio.file.Files
+import java.nio.file.Paths
 
 class GView(subtract: DoubleBinding) : TilePane(), InvalidationListener {
     var size = subtract
@@ -59,6 +64,44 @@ class GView(subtract: DoubleBinding) : TilePane(), InvalidationListener {
         listSpecial.children.addAll(inputBox, buttonBox)
 
         children.add(listSpecial)
+
+
+        val drag = HBox()
+        drag.onDragOver = EventHandler { event ->
+            if (event.gestureSource !== drag
+                && event.dragboard.hasFiles()
+            ) {
+                event.acceptTransferModes(*TransferMode.COPY_OR_MOVE)
+            }
+            event.consume()
+        }
+
+        drag.setOnDragDropped { event ->
+            val db = event.dragboard
+            var success = false
+            if (db.hasFiles()) {
+                val content = String(Files.readAllBytes(Paths.get(db.files.get(0).toString())), StandardCharsets.UTF_8)
+                Model.addNotes(Pair(content, false))
+                success = true
+            }
+            event.isDropCompleted = success
+            event.consume()
+        }
+        drag.apply {
+            style = "-fx-pref-height: 225;" + "-fx-pref-width: 225"
+            padding = Insets(10.0)
+            background = Background(
+                BackgroundFill(
+                    Color.LIGHTSALMON,
+                    CornerRadii(10.0),
+                    Insets(10.0)
+                )
+            )
+        }
+        val dragNotice = Label("Drag a .txt file to add new note")
+        drag.children.add(dragNotice)
+        drag.alignment = Pos.CENTER
+        children.add(drag)
 
         var count = 0
         for (note in notes) {
