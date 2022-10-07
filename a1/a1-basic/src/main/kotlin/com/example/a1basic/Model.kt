@@ -2,7 +2,6 @@ package com.example.a1basic
 
 import javafx.beans.InvalidationListener
 import javafx.beans.Observable
-import javafx.scene.Scene
 
 object Model : Observable {
     private val listeners = mutableListOf<InvalidationListener?>()

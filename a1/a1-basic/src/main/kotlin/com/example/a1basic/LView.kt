@@ -11,7 +11,6 @@ import javafx.scene.control.Label
 import javafx.scene.control.TextArea
 import javafx.scene.layout.*
 import javafx.scene.paint.Color
-import java.util.*
 
 class LView(subtract: DoubleBinding) : VBox(), InvalidationListener {
     var size = subtract
@@ -21,7 +20,7 @@ class LView(subtract: DoubleBinding) : VBox(), InvalidationListener {
     }
 
     override fun invalidated(observable: Observable?) {
-        var notes : List<Pair<String, Boolean>> = Model.getNotes()
+        val notes : List<Pair<String, Boolean>> = Model.getNotes()
 
         children.clear()
 // input note
@@ -62,13 +61,13 @@ class LView(subtract: DoubleBinding) : VBox(), InvalidationListener {
 // notes
         var count = 0
         for (note in notes) {
-            var index = count
+            val index = count
             count++
             if(!Model.getShowArchived() && note.second){
 
             }
             else {
-                var tempNote = HBox()
+                val tempNote = HBox()
                 tempNote.apply {
                     padding = Insets(10.0)
                     background = Background(
@@ -80,7 +79,7 @@ class LView(subtract: DoubleBinding) : VBox(), InvalidationListener {
                     )
                 }
 
-                var archivedOrNot = CheckBox("Archived")
+                val archivedOrNot = CheckBox("Archived")
                 archivedOrNot.padding = Insets(10.0)
                 archivedOrNot.isSelected = note.second
                 archivedOrNot.selectedProperty().addListener { _, _, newValue ->
@@ -88,7 +87,7 @@ class LView(subtract: DoubleBinding) : VBox(), InvalidationListener {
                 }
                 HBox.setHgrow(archivedOrNot, Priority.NEVER)
 
-                var content = Label(note.first)
+                val content = Label(note.first)
                 content.isWrapText = true
                 content.prefWidthProperty().bind(size)
                 content.padding = Insets(10.0)

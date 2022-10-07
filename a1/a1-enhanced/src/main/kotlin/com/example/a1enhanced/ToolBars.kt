@@ -13,7 +13,7 @@ import javafx.scene.text.Text
 class ToolBars() : HBox() {
 
     init {
-        val toolText1 = Text("Views:")
+        val toolText1 = Text("View:")
         val buttonList = Button("List")
         val buttonGrid = Button("Grid")
 

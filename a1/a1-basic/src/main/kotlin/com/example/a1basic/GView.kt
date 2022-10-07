@@ -23,8 +23,9 @@ class GView(subtract: DoubleBinding) : TilePane(), InvalidationListener {
         this.apply {
             prefWidthProperty().bind(size)
         }
-        var notes : List<Pair<String, Boolean>> = Model.getNotes()
+        val notes : List<Pair<String, Boolean>> = Model.getNotes()
         children.clear()
+// input note
         val listSpecial = VBox()
         listSpecial.apply {
             style = "-fx-pref-height: 225;" + "-fx-pref-width: 225"
@@ -59,15 +60,15 @@ class GView(subtract: DoubleBinding) : TilePane(), InvalidationListener {
         listSpecial.children.addAll(inputBox, buttonBox)
 
         children.add(listSpecial)
-
+// notes
         var count = 0
         for (note in notes) {
-            var index = count
+            val index = count
             count++
             if (!Model.getShowArchived() && note.second) {
 
             } else {
-                var tempNote = VBox()
+                val tempNote = VBox()
                 tempNote.apply {
                     padding = Insets(10.0)
                     style = "-fx-pref-height: 225;" + "-fx-pref-width: 225"
@@ -80,7 +81,7 @@ class GView(subtract: DoubleBinding) : TilePane(), InvalidationListener {
                     )
                 }
 
-                var archivedOrNot = CheckBox("Archived")
+                val archivedOrNot = CheckBox("Archived")
                 archivedOrNot.padding = Insets(10.0)
                 archivedOrNot.isSelected = note.second
                 archivedOrNot.selectedProperty().addListener { _, _, newValue ->
@@ -88,7 +89,7 @@ class GView(subtract: DoubleBinding) : TilePane(), InvalidationListener {
                 }
                 HBox.setHgrow(archivedOrNot, Priority.NEVER)
 
-                var content = Label(note.first)
+                val content = Label(note.first)
                 content.isWrapText = true
 
                 val contentBox = HBox(content)
