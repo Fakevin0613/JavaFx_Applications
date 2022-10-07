@@ -5,19 +5,19 @@ import javafx.beans.Observable
 
 object Model : Observable {
     private val listeners = mutableListOf<InvalidationListener?>()
-    private var notes : MutableList<Pair<String, Boolean>> = mutableListOf()
+    private var notes : MutableList<Pair<String, Int>> = mutableListOf()
     private var showArchived: Boolean = false
     private var ascend: String = "Length (asc)"
     private var viewNumber = 1
 
     init {
-        notes.add(Pair("Note Simple", false))
-        notes.add(Pair("Note adfadsfadfasdfadsfadsfadsfasdf", false))
+        notes.add(Pair("Note Simple", 0))
+        notes.add(Pair("Note adfadsfadfasdfadsfadsfadsfasdf", 0))
         notes.add(Pair("Notelonggggggggggggggggafdadfdafadfadsfadfadfadsfadsfadsfad" +
-                "faasdfadfasdfadsfadsfadsfadfadfadsfadfadsfdafad", false))
+                "faasdfadfasdfadsfadsfadsfadfadfadsfadfadsfdafad", 2))
         notes.add(Pair("Note Archiveadfadfdafdafdadadfadfadfadfadfadfadsfa" +
-                "adfadfadfasdfadsfadsfasfasfas", true))
-        notes.add(Pair("Note high \na\na\na\na\na\na\na", false))
+                "adfadfadfasdfadsfadsfasfasfas", 1))
+        notes.add(Pair("Note high \na\na\na\na\na\na\na", 0))
         updateAscend()
     }
 
@@ -45,19 +45,19 @@ object Model : Observable {
         listeners.forEach {it?.invalidated(this)}
     }
 
-    fun addNotes(note: Pair<String, Boolean>){
+    fun addNotes(note: Pair<String, Int>){
         notes.add(note)
         updateAscend()
         listeners.forEach {it?.invalidated(this)}
     }
 
-    fun changeArchived(index: Int, note: Pair<String, Boolean>){
+    fun changeArchived(index: Int, note: Pair<String, Int>){
         notes[index] = note
         updateAscend()
         listeners.forEach {it?.invalidated(this)}
     }
 
-    fun getNotes(): MutableList<Pair<String, Boolean>> {
+    fun getNotes(): MutableList<Pair<String, Int>> {
         return notes
     }
 

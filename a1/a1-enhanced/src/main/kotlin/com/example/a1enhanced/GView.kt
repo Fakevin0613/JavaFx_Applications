@@ -28,7 +28,7 @@ class GView(subtract: DoubleBinding) : TilePane(), InvalidationListener {
         this.apply {
             prefWidthProperty().bind(size)
         }
-        var notes : List<Pair<String, Boolean>> = Model.getNotes()
+        var notes : List<Pair<String, Int>> = Model.getNotes()
         children.clear()
         val listSpecial = VBox()
         listSpecial.apply {
@@ -55,7 +55,7 @@ class GView(subtract: DoubleBinding) : TilePane(), InvalidationListener {
 
         val buttonSubmit = Button("Create")
         buttonSubmit.onAction = EventHandler {
-            Model.addNotes(Pair(userInput.text, false))
+            Model.addNotes(Pair(userInput.text, 0))
         }
         buttonSubmit.apply { style = "-fx-pref-width: 205" }
         val buttonBox = HBox(buttonSubmit)
@@ -81,7 +81,7 @@ class GView(subtract: DoubleBinding) : TilePane(), InvalidationListener {
             var success = false
             if (db.hasFiles()) {
                 val content = String(Files.readAllBytes(Paths.get(db.files.get(0).toString())), StandardCharsets.UTF_8)
-                Model.addNotes(Pair(content, false))
+                Model.addNotes(Pair(content, 0))
                 success = true
             }
             event.isDropCompleted = success
@@ -104,32 +104,47 @@ class GView(subtract: DoubleBinding) : TilePane(), InvalidationListener {
         children.add(drag)
 
         var count = 0
+
         for (note in notes) {
             var index = count
             count++
-            if (!Model.getShowArchived() && note.second) {
+            if(note.second == 0 || note.second == 1){
 
-            } else {
+            }
+            else {
                 var tempNote = VBox()
                 tempNote.apply {
                     padding = Insets(10.0)
                     style = "-fx-pref-height: 225;" + "-fx-pref-width: 225"
                     background = Background(
                         BackgroundFill(
-                            if (note.second) Color.LIGHTGRAY else Color.LIGHTYELLOW,
+                            Color.LIGHTBLUE,
                             CornerRadii(10.0),
                             Insets(10.0, 10.0, 10.0, 10.0)
                         )
                     )
                 }
 
+                val buttons = HBox()
+
+                var urgentOrNot = CheckBox("Urgent")
+                urgentOrNot.padding = Insets(10.0)
+                urgentOrNot.isSelected = (note.second == 2)
+                urgentOrNot.selectedProperty().addListener { _, _, newValue ->
+                    var output = if(newValue == true) 2 else 0
+                    Model.changeArchived(index, Pair(note.first, output))
+                }
+
                 var archivedOrNot = CheckBox("Archived")
                 archivedOrNot.padding = Insets(10.0)
-                archivedOrNot.isSelected = note.second
+                archivedOrNot.isSelected = (note.second == 1)
                 archivedOrNot.selectedProperty().addListener { _, _, newValue ->
-                    Model.changeArchived(index, Pair(note.first, newValue))
+                    var output = if(newValue == true) 1 else 0
+                    Model.changeArchived(index, Pair(note.first, output))
                 }
-                HBox.setHgrow(archivedOrNot, Priority.NEVER)
+
+                buttons.children.addAll(urgentOrNot, archivedOrNot)
+
 
                 var content = Label(note.first)
                 content.isWrapText = true
@@ -139,12 +154,71 @@ class GView(subtract: DoubleBinding) : TilePane(), InvalidationListener {
                 contentBox.padding = Insets(10.0, 10.0, 5.0, 10.0)
                 HBox.setHgrow(contentBox, Priority.NEVER)
 
+                tempNote.children.addAll(
+                    contentBox,
+                    buttons
+                )
+                children.add(tempNote)
+            }
+        }
+
+        count = 0
+
+        for (note in notes) {
+            var index = count
+            count++
+            if(note.second == 2){
+
+            }
+            else if(!Model.getShowArchived() && note.second == 1){
+
+            }
+            else {
+                var tempNote = VBox()
+                tempNote.apply {
+                    padding = Insets(10.0)
+                    style = "-fx-pref-height: 225;" + "-fx-pref-width: 225"
+                    background = Background(
+                        BackgroundFill(
+                            if (note.second == 1) Color.LIGHTGRAY else Color.LIGHTYELLOW,
+                            CornerRadii(10.0),
+                            Insets(10.0, 10.0, 10.0, 10.0)
+                        )
+                    )
+                }
+
+                val buttons = HBox()
+
+                var urgentOrNot = CheckBox("Urgent")
+                urgentOrNot.padding = Insets(10.0)
+                urgentOrNot.isSelected = (note.second == 2)
+                urgentOrNot.selectedProperty().addListener { _, _, newValue ->
+                    var output = if(newValue == true) 2 else 0
+                    Model.changeArchived(index, Pair(note.first, output))
+                }
+
+                var archivedOrNot = CheckBox("Archived")
+                archivedOrNot.padding = Insets(10.0)
+                archivedOrNot.isSelected = (note.second == 1)
+                archivedOrNot.selectedProperty().addListener { _, _, newValue ->
+                    var output = if(newValue == true) 1 else 0
+                    Model.changeArchived(index, Pair(note.first, output))
+                }
+
+                buttons.children.addAll(urgentOrNot, archivedOrNot)
 
 
+                var content = Label(note.first)
+                content.isWrapText = true
+
+                val contentBox = HBox(content)
+                contentBox.apply { style = "-fx-pref-height: 205;" + "-fx-pref-width: 205" }
+                contentBox.padding = Insets(10.0, 10.0, 5.0, 10.0)
+                HBox.setHgrow(contentBox, Priority.NEVER)
 
                 tempNote.children.addAll(
                     contentBox,
-                    archivedOrNot
+                    buttons
                 )
                 children.add(tempNote)
             }

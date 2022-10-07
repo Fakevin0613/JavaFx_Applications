@@ -33,14 +33,14 @@ class Views(stage: Stage) : BorderPane(), InvalidationListener {
         val note = if(Model.getNotes().size == 1) "note" else "notes"
         val noteLength = Model.getNotes().size
 
-        var archivedNum = 0
+        var activeNum = 0
         for(thenote in Model.getNotes()){
-            if(!thenote.second){
-                archivedNum++
+            if(thenote.second == 0 || thenote.second == 2){
+                activeNum++
             }
         }
-        val isare = if(archivedNum == 1) "is" else "are"
-        bottomView = Label("$noteLength $note, $archivedNum of which $isare active")
+        val isare = if(activeNum == 1) "is" else "are"
+        bottomView = Label("$noteLength $note, $activeNum of which $isare active")
         bottomView.padding = Insets(5.0)
         this.top = thetop
         this.bottom = bottomView

@@ -26,7 +26,7 @@ class LView(subtract: DoubleBinding) : VBox(), InvalidationListener {
     }
 
     override fun invalidated(observable: Observable?) {
-        var notes : List<Pair<String, Boolean>> = Model.getNotes()
+        var notes : List<Pair<String, Int>> = Model.getNotes()
 
         children.clear()
 // input note
@@ -55,7 +55,7 @@ class LView(subtract: DoubleBinding) : VBox(), InvalidationListener {
 
         val buttonSubmit = Button("Create")
         buttonSubmit.onAction = EventHandler {
-            Model.addNotes(Pair(userInput.text, false))
+            Model.addNotes(Pair(userInput.text, 0))
         }
         buttonSubmit.apply { style = "-fx-pref-height: 42;" + "-fx-pref-width: 75" }
         val buttonBox = HBox(buttonSubmit)
@@ -82,7 +82,7 @@ class LView(subtract: DoubleBinding) : VBox(), InvalidationListener {
             var success = false
             if (db.hasFiles()) {
                 val content = String(Files.readAllBytes(Paths.get(db.files.get(0).toString())), StandardCharsets.UTF_8)
-                Model.addNotes(Pair(content, false))
+                Model.addNotes(Pair(content, 0))
                 success = true
             }
             event.isDropCompleted = success
@@ -104,11 +104,12 @@ class LView(subtract: DoubleBinding) : VBox(), InvalidationListener {
         children.add(drag)
 
 // notes
+
         var count = 0
         for (note in notes) {
             var index = count
             count++
-            if(!Model.getShowArchived() && note.second){
+            if(note.second == 0 || note.second == 1){
 
             }
             else {
@@ -117,20 +118,32 @@ class LView(subtract: DoubleBinding) : VBox(), InvalidationListener {
                     padding = Insets(10.0)
                     background = Background(
                         BackgroundFill(
-                            if (note.second)  Color.LIGHTGRAY else Color.LIGHTYELLOW,
+                            Color.LIGHTBLUE,
                             CornerRadii(10.0),
                             Insets(5.0, 10.0, 5.0, 10.0)
                         )
                     )
                 }
 
+                val buttons = VBox()
+
+                var urgentOrNot = CheckBox("Urgent")
+                urgentOrNot.padding = Insets(10.0, 10.0, 0.0, 10.0)
+                urgentOrNot.isSelected = (note.second == 2)
+                urgentOrNot.selectedProperty().addListener { _, _, newValue ->
+                    var output = if(newValue == true) 2 else 0
+                    Model.changeArchived(index, Pair(note.first, output))
+                }
+
                 var archivedOrNot = CheckBox("Archived")
                 archivedOrNot.padding = Insets(10.0)
-                archivedOrNot.isSelected = note.second
+                archivedOrNot.isSelected = (note.second == 1)
                 archivedOrNot.selectedProperty().addListener { _, _, newValue ->
-                    Model.changeArchived(index, Pair(note.first, newValue))
+                    var output = if(newValue == true) 1 else 0
+                    Model.changeArchived(index, Pair(note.first, output))
                 }
-                HBox.setHgrow(archivedOrNot, Priority.NEVER)
+
+                buttons.children.addAll(urgentOrNot, archivedOrNot)
 
                 var content = Label(note.first)
                 content.isWrapText = true
@@ -140,10 +153,65 @@ class LView(subtract: DoubleBinding) : VBox(), InvalidationListener {
 
 
                 tempNote.children.addAll(content,
-                    archivedOrNot)
+                    buttons)
                 children.add(tempNote)
             }
+        }
 
+        count = 0
+        for (note in notes) {
+            var index = count
+            count++
+            if(note.second == 2){
+
+            }
+            else if(!Model.getShowArchived() && note.second == 1){
+
+            }
+            else {
+                var tempNote = HBox()
+                tempNote.apply {
+                    padding = Insets(10.0)
+                    background = Background(
+                        BackgroundFill(
+                            if (note.second == 1)  Color.LIGHTGRAY else Color.LIGHTYELLOW,
+                            CornerRadii(10.0),
+                            Insets(5.0, 10.0, 5.0, 10.0)
+                        )
+                    )
+                }
+
+                val buttons = VBox()
+
+                var urgentOrNot = CheckBox("Urgent")
+                urgentOrNot.padding = Insets(10.0, 10.0, 0.0, 10.0)
+                urgentOrNot.isSelected = (note.second == 2)
+                urgentOrNot.selectedProperty().addListener { _, _, newValue ->
+                    var output = if(newValue == true) 2 else 0
+                    Model.changeArchived(index, Pair(note.first, output))
+                }
+
+                var archivedOrNot = CheckBox("Archived")
+                archivedOrNot.padding = Insets(10.0)
+                archivedOrNot.isSelected = (note.second == 1)
+                archivedOrNot.selectedProperty().addListener { _, _, newValue ->
+                    var output = if(newValue == true) 1 else 0
+                    Model.changeArchived(index, Pair(note.first, output))
+                }
+
+                buttons.children.addAll(urgentOrNot, archivedOrNot)
+
+                var content = Label(note.first)
+                content.isWrapText = true
+                content.prefWidthProperty().bind(size)
+                content.padding = Insets(10.0)
+                HBox.setHgrow(content, Priority.ALWAYS)
+
+
+                tempNote.children.addAll(content,
+                    buttons)
+                children.add(tempNote)
+            }
         }
     }
 }
