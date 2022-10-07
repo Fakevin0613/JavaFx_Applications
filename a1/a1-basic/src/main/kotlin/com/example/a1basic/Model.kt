@@ -2,29 +2,38 @@ package com.example.a1basic
 
 import javafx.beans.InvalidationListener
 import javafx.beans.Observable
+import javafx.scene.Scene
 
 object Model : Observable {
     private val listeners = mutableListOf<InvalidationListener?>()
     private var notes : MutableList<Pair<String, Boolean>> = mutableListOf()
     private var showArchived: Boolean = false
     private var ascend: String = "Length (asc)"
+    private var viewNumber = 2
 
     init {
         notes.add(Pair("Note Simple", false))
         notes.add(Pair("Notelonggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg" +
                 "ggggggggggggggggggggggggggggggggggggggggggggggggg", false))
         notes.add(Pair("Note Archiveadfadfdafdafdad", true))
-        notes.add(Pair("Note high \na\na\na\na\na\na\na\n", false))
+        notes.add(Pair("Note high \na\na\na\na\na\na\na\na\na\na\na", false))
         updateAscend()
     }
 
-    fun updateAscend(){
+    fun getViewNumber(): Int {
+        return viewNumber
+    }
+
+    fun changeViewNumber(num: Int){
+        viewNumber = num
+        listeners.forEach {it?.invalidated(this)}
+    }
+
+    private fun updateAscend(){
         if(ascend == "Length (asc)"){
-            println(ascend)
             notes.sortBy { it.first.length }
         }
         else if(ascend == "Length (desc)"){
-            println(ascend)
             notes.sortByDescending { it.first.length }
         }
     }
@@ -42,7 +51,7 @@ object Model : Observable {
     }
 
     fun changeArchived(index: Int, note: Pair<String, Boolean>){
-        notes.set(index, note)
+        notes[index] = note
         updateAscend()
         listeners.forEach {it?.invalidated(this)}
     }
