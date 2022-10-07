@@ -10,10 +10,10 @@ import javafx.scene.layout.BorderPane
 import javafx.stage.Stage
 
 class Views(stage: Stage) : BorderPane(), InvalidationListener {
-    var thetop: ToolBars = ToolBars()
-    var center1: ScrollPane
-    var center2: ScrollPane
-    lateinit var bottomView: Label
+    private var thetop: ToolBars = ToolBars()
+    private var center1: ScrollPane
+    private var center2: ScrollPane
+    private lateinit var bottomView: Label
     init {
         stage.scene = Scene(this, 800.0, 600.0)
         val listView = LView(thetop.widthProperty().subtract(135))

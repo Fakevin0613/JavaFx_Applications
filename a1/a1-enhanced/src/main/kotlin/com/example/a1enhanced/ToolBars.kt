@@ -55,7 +55,7 @@ class ToolBars() : HBox() {
         buttonArchive.selectedProperty().addListener { _, _, newValue ->
             Model.changeShowArchived(newValue)
         }
-        buttonArchive.nodeOrientation = NodeOrientation.RIGHT_TO_LEFT;
+        buttonArchive.nodeOrientation = NodeOrientation.RIGHT_TO_LEFT
 
         val divider2 = Separator()
 
@@ -119,13 +119,13 @@ class ToolBars() : HBox() {
             toolRight)
         toolPaneLeft.apply {
             padding = Insets(0.0, 0.0, 0.0, 0.0)
-            HBox.setHgrow(this, Priority.ALWAYS)
+            setHgrow(this, Priority.ALWAYS)
         }
 
         toolPaneRight.items.addAll(toolBut)
         toolPaneRight.apply {
             padding = Insets(0.0, 0.0, 0.0, 0.0)
-            HBox.setHgrow(this, Priority.NEVER)
+            setHgrow(this, Priority.NEVER)
         }
 
         children.addAll(toolPaneLeft, toolPaneRight)

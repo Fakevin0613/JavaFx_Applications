@@ -26,7 +26,7 @@ class LView(subtract: DoubleBinding) : VBox(), InvalidationListener {
     }
 
     override fun invalidated(observable: Observable?) {
-        var notes : List<Pair<String, Int>> = Model.getNotes()
+        val notes : List<Pair<String, Int>> = Model.getNotes()
 
         children.clear()
 // input note
@@ -103,17 +103,17 @@ class LView(subtract: DoubleBinding) : VBox(), InvalidationListener {
         drag.alignment = Pos.CENTER_LEFT
         children.add(drag)
 
-// notes
+        // notes urgent
 
         var count = 0
         for (note in notes) {
-            var index = count
+            val index = count
             count++
             if(note.second == 0 || note.second == 1){
 
             }
             else {
-                var tempNote = HBox()
+                val tempNote = HBox()
                 tempNote.apply {
                     padding = Insets(10.0)
                     background = Background(
@@ -127,25 +127,25 @@ class LView(subtract: DoubleBinding) : VBox(), InvalidationListener {
 
                 val buttons = VBox()
 
-                var urgentOrNot = CheckBox("Urgent")
+                val urgentOrNot = CheckBox("Urgent")
                 urgentOrNot.padding = Insets(10.0, 10.0, 0.0, 10.0)
                 urgentOrNot.isSelected = (note.second == 2)
                 urgentOrNot.selectedProperty().addListener { _, _, newValue ->
-                    var output = if(newValue == true) 2 else 0
+                    val output = if(newValue == true) 2 else 0
                     Model.changeArchived(index, Pair(note.first, output))
                 }
 
-                var archivedOrNot = CheckBox("Archived")
+                val archivedOrNot = CheckBox("Archived")
                 archivedOrNot.padding = Insets(10.0)
                 archivedOrNot.isSelected = (note.second == 1)
                 archivedOrNot.selectedProperty().addListener { _, _, newValue ->
-                    var output = if(newValue == true) 1 else 0
+                    val output = if(newValue == true) 1 else 0
                     Model.changeArchived(index, Pair(note.first, output))
                 }
 
                 buttons.children.addAll(urgentOrNot, archivedOrNot)
 
-                var content = Label(note.first)
+                val content = Label(note.first)
                 content.isWrapText = true
                 content.prefWidthProperty().bind(size)
                 content.padding = Insets(10.0)
@@ -157,10 +157,10 @@ class LView(subtract: DoubleBinding) : VBox(), InvalidationListener {
                 children.add(tempNote)
             }
         }
-
+        // notes and archived
         count = 0
         for (note in notes) {
-            var index = count
+            val index = count
             count++
             if(note.second == 2){
 
@@ -169,7 +169,7 @@ class LView(subtract: DoubleBinding) : VBox(), InvalidationListener {
 
             }
             else {
-                var tempNote = HBox()
+                val tempNote = HBox()
                 tempNote.apply {
                     padding = Insets(10.0)
                     background = Background(
@@ -183,25 +183,25 @@ class LView(subtract: DoubleBinding) : VBox(), InvalidationListener {
 
                 val buttons = VBox()
 
-                var urgentOrNot = CheckBox("Urgent")
+                val urgentOrNot = CheckBox("Urgent")
                 urgentOrNot.padding = Insets(10.0, 10.0, 0.0, 10.0)
                 urgentOrNot.isSelected = (note.second == 2)
                 urgentOrNot.selectedProperty().addListener { _, _, newValue ->
-                    var output = if(newValue == true) 2 else 0
+                    val output = if(newValue == true) 2 else 0
                     Model.changeArchived(index, Pair(note.first, output))
                 }
 
-                var archivedOrNot = CheckBox("Archived")
+                val archivedOrNot = CheckBox("Archived")
                 archivedOrNot.padding = Insets(10.0)
                 archivedOrNot.isSelected = (note.second == 1)
                 archivedOrNot.selectedProperty().addListener { _, _, newValue ->
-                    var output = if(newValue == true) 1 else 0
+                    val output = if(newValue == true) 1 else 0
                     Model.changeArchived(index, Pair(note.first, output))
                 }
 
                 buttons.children.addAll(urgentOrNot, archivedOrNot)
 
-                var content = Label(note.first)
+                val content = Label(note.first)
                 content.isWrapText = true
                 content.prefWidthProperty().bind(size)
                 content.padding = Insets(10.0)

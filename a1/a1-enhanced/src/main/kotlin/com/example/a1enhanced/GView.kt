@@ -28,7 +28,7 @@ class GView(subtract: DoubleBinding) : TilePane(), InvalidationListener {
         this.apply {
             prefWidthProperty().bind(size)
         }
-        var notes : List<Pair<String, Int>> = Model.getNotes()
+        val notes : List<Pair<String, Int>> = Model.getNotes()
         children.clear()
         val listSpecial = VBox()
         listSpecial.apply {
@@ -106,13 +106,12 @@ class GView(subtract: DoubleBinding) : TilePane(), InvalidationListener {
         var count = 0
 
         for (note in notes) {
-            var index = count
+            val index = count
             count++
             if(note.second == 0 || note.second == 1){
-
             }
             else {
-                var tempNote = VBox()
+                val tempNote = VBox()
                 tempNote.apply {
                     padding = Insets(10.0)
                     style = "-fx-pref-height: 225;" + "-fx-pref-width: 225"
@@ -127,26 +126,26 @@ class GView(subtract: DoubleBinding) : TilePane(), InvalidationListener {
 
                 val buttons = HBox()
 
-                var urgentOrNot = CheckBox("Urgent")
+                val urgentOrNot = CheckBox("Urgent")
                 urgentOrNot.padding = Insets(10.0)
                 urgentOrNot.isSelected = (note.second == 2)
                 urgentOrNot.selectedProperty().addListener { _, _, newValue ->
-                    var output = if(newValue == true) 2 else 0
+                    val output = if(newValue == true) 2 else 0
                     Model.changeArchived(index, Pair(note.first, output))
                 }
 
-                var archivedOrNot = CheckBox("Archived")
+                val archivedOrNot = CheckBox("Archived")
                 archivedOrNot.padding = Insets(10.0)
                 archivedOrNot.isSelected = (note.second == 1)
                 archivedOrNot.selectedProperty().addListener { _, _, newValue ->
-                    var output = if(newValue == true) 1 else 0
+                    val output = if(newValue == true) 1 else 0
                     Model.changeArchived(index, Pair(note.first, output))
                 }
 
                 buttons.children.addAll(urgentOrNot, archivedOrNot)
 
 
-                var content = Label(note.first)
+                val content = Label(note.first)
                 content.isWrapText = true
 
                 val contentBox = HBox(content)
@@ -165,7 +164,7 @@ class GView(subtract: DoubleBinding) : TilePane(), InvalidationListener {
         count = 0
 
         for (note in notes) {
-            var index = count
+            val index = count
             count++
             if(note.second == 2){
 
@@ -174,7 +173,7 @@ class GView(subtract: DoubleBinding) : TilePane(), InvalidationListener {
 
             }
             else {
-                var tempNote = VBox()
+                val tempNote = VBox()
                 tempNote.apply {
                     padding = Insets(10.0)
                     style = "-fx-pref-height: 225;" + "-fx-pref-width: 225"
@@ -189,26 +188,26 @@ class GView(subtract: DoubleBinding) : TilePane(), InvalidationListener {
 
                 val buttons = HBox()
 
-                var urgentOrNot = CheckBox("Urgent")
+                val urgentOrNot = CheckBox("Urgent")
                 urgentOrNot.padding = Insets(10.0)
                 urgentOrNot.isSelected = (note.second == 2)
                 urgentOrNot.selectedProperty().addListener { _, _, newValue ->
-                    var output = if(newValue == true) 2 else 0
+                    val output = if(newValue == true) 2 else 0
                     Model.changeArchived(index, Pair(note.first, output))
                 }
 
-                var archivedOrNot = CheckBox("Archived")
+                val archivedOrNot = CheckBox("Archived")
                 archivedOrNot.padding = Insets(10.0)
                 archivedOrNot.isSelected = (note.second == 1)
                 archivedOrNot.selectedProperty().addListener { _, _, newValue ->
-                    var output = if(newValue == true) 1 else 0
+                    val output = if(newValue == true) 1 else 0
                     Model.changeArchived(index, Pair(note.first, output))
                 }
 
                 buttons.children.addAll(urgentOrNot, archivedOrNot)
 
 
-                var content = Label(note.first)
+                val content = Label(note.first)
                 content.isWrapText = true
 
                 val contentBox = HBox(content)
