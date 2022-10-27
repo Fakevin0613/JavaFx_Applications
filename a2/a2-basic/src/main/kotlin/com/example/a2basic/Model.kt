@@ -48,6 +48,9 @@ object Model: Observable {
                 dataNumber = i
             }
         }
+        if(!hasNegative){
+            viewNumber = 1
+        }
         hasNegative = false
         for(nums in datas[dataNumber].second){
             if(nums < 0.0){
