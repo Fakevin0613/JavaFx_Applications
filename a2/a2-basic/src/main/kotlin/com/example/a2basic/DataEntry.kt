@@ -25,10 +25,15 @@ class DataEntry(thewidth: DoubleBinding) : VBox(), InvalidationListener {
     }
     override fun invalidated(observable: Observable?) {
         children.clear()
+        var lastFocus = Model.getLastFocus()
         val title = Label("Dataset name: " + Model.getAlls()[Model.getDataNum()].first)
 
         var allTextField = List(Model.getAlls()[Model.getDataNum()].second.size) {TextField().apply { isFocusTraversable = false }}
-        allTextField[Model.getLastFocus()].isFocusTraversable = true
+
+        if(lastFocus >= Model.getAlls()[Model.getDataNum()].second.size){
+            lastFocus = Model.getAlls()[Model.getDataNum()].second.size - 1
+        }
+        allTextField[lastFocus].isFocusTraversable = true
         val rows = VBox()
         for((count, data) in Model.getAlls()[Model.getDataNum()].second.withIndex()){
             val aRow = HBox()
@@ -40,7 +45,7 @@ class DataEntry(thewidth: DoubleBinding) : VBox(), InvalidationListener {
                 HBox.setHgrow(newInput, Priority.ALWAYS)
             }
 
-            if(count == Model.getLastFocus()){
+            if(count == lastFocus){
                 newInput.requestFocus()
             }
 

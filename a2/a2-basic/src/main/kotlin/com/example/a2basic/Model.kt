@@ -2,13 +2,12 @@ package com.example.a2basic
 
 import javafx.beans.InvalidationListener
 import javafx.beans.Observable
-import java.lang.Exception
 
 object Model: Observable {
     private val listeners = mutableListOf<InvalidationListener?>()
     private var viewNumber = 1
     private var dataNumber = 0
-    private var lastFucus = 0
+    private var lastFocus = 0
     private var datas : MutableList<Pair<String, MutableList<Double>>> = mutableListOf()
 
     init {
@@ -26,7 +25,7 @@ object Model: Observable {
     }
 
     fun getLastFocus(): Int {
-        return lastFucus
+        return lastFocus
     }
 
     fun getDataNum(): Int {
@@ -58,8 +57,10 @@ object Model: Observable {
             if(data.first == name){
                 list = data.second
                 list.add(number)
+                lastFocus = list.size - 1
             }
         }
+
         listeners.forEach {it?.invalidated(this)}
     }
 
@@ -82,7 +83,7 @@ object Model: Observable {
                 list[number] = thedata
             }
         }
-        lastFucus = number
+        lastFocus = number
         listeners.forEach {it?.invalidated(this)}
     }
 

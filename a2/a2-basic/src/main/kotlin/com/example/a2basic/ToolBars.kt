@@ -55,18 +55,30 @@ class ToolBars() : HBox() , InvalidationListener {
         val buttonLine = Button("Line")
         buttonLine.maxWidth = 75.0
         setHgrow(buttonLine, Priority.ALWAYS)
+        buttonLine.onAction = EventHandler {
+            Model.changeViewNumber(1)
+        }
 
         val buttonBar = Button("Bar")
         buttonBar.maxWidth = 75.0
         setHgrow(buttonBar, Priority.ALWAYS)
+        buttonBar.onAction = EventHandler {
+            Model.changeViewNumber(2)
+        }
 
         val buttonSEM = Button("Bar(SEM)")
         buttonSEM.maxWidth = 75.0
         setHgrow(buttonSEM, Priority.ALWAYS)
+        buttonSEM.onAction = EventHandler {
+            Model.changeViewNumber(3)
+        }
 
         val buttonPie = Button("Pie")
         buttonPie.maxWidth = 75.0
         setHgrow(buttonPie, Priority.ALWAYS)
+        buttonPie.onAction = EventHandler {
+            Model.changeViewNumber(4)
+        }
 
 
         val toolLeft = HBox()
