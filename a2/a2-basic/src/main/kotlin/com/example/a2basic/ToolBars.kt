@@ -80,6 +80,15 @@ class ToolBars() : HBox() , InvalidationListener {
             Model.changeViewNumber(4)
         }
 
+        if(Model.getHasNegative()){
+            buttonSEM.isDisable = true
+            buttonPie.isDisable = true
+        }
+        else{
+            buttonSEM.isDisable = false
+            buttonPie.isDisable = false
+        }
+
 
         val toolLeft = HBox()
         toolLeft.apply {

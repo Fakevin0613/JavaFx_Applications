@@ -8,11 +8,20 @@ object Model: Observable {
     private var viewNumber = 1
     private var dataNumber = 0
     private var lastFocus = 0
+    private var hasNegative = true
     private var datas : MutableList<Pair<String, MutableList<Double>>> = mutableListOf()
 
     init {
-        datas.add(Pair("test1", mutableListOf(1.0,2.0,3.0,4.0)  ))
+        datas.add(Pair("test1", mutableListOf(-1.0, 2.0, -3.0, 4.0, -5.0, 6.0, -7.0, 8.0, -9.0)  ))
         datas.add(Pair("test2", mutableListOf(10.0,4.0,3.9,4.3,2.2)  ))
+        datas.add(Pair("quadratic", mutableListOf(0.1, 1.0, 4.0, 9.0, 16.0)  ))
+        datas.add(Pair("negative quadratic", mutableListOf(-0.1, -1.0, -4.0, -9.0, -16.0)  ))
+        datas.add(Pair("inflation '90-'22",
+            mutableListOf(4.8, 5.6, 1.5, 1.9, 0.2, 2.1, 1.6, 1.6, 1.0, 1.7, 2.7, 2.5, 2.3,
+                2.8, 1.9, 2.2, 2.0, 2.1, 2.4, 0.3, 1.8, 2.9, 1.5, 0.9, 1.9, 1.1, 1.4, 1.6, 2.3, 1.9, 0.7, 3.4, 6.8)  ))
+    }
+    private fun toTrueHasNegative(){
+        hasNegative = true
     }
 
     fun getViewNumber(): Int {
@@ -33,13 +42,24 @@ object Model: Observable {
     }
 
     fun changeDataNum(str: String){
-            val length = datas.size - 1
-            for(i in 0..length){
-                if(str == datas[i].first){
-                    dataNumber = i
-                }
+        val length = datas.size - 1
+        for(i in 0..length){
+            if(str == datas[i].first){
+                dataNumber = i
             }
-            listeners.forEach {it?.invalidated(this)}
+        }
+        hasNegative = false
+        for(nums in datas[dataNumber].second){
+            if(nums < 0.0){
+                toTrueHasNegative()
+            }
+        }
+
+        listeners.forEach {it?.invalidated(this)}
+    }
+
+    fun getHasNegative(): Boolean {
+        return hasNegative
     }
 
     fun getAlls(): MutableList<Pair<String, MutableList<Double>>> {
@@ -60,7 +80,12 @@ object Model: Observable {
                 lastFocus = list.size - 1
             }
         }
-
+        if(!hasNegative){
+            viewNumber = 1
+        }
+        if(number < 0.0){
+            toTrueHasNegative()
+        }
         listeners.forEach {it?.invalidated(this)}
     }
 
@@ -72,6 +97,16 @@ object Model: Observable {
                 list.removeAt(number)
             }
         }
+        if(!hasNegative){
+            viewNumber = 1
+        }
+        hasNegative = false
+        for(nums in datas[dataNumber].second){
+            if(nums < 0.0){
+                toTrueHasNegative()
+            }
+        }
+
         listeners.forEach {it?.invalidated(this)}
     }
 
@@ -81,6 +116,15 @@ object Model: Observable {
             if (data.first == name) {
                 list = data.second
                 list[number] = thedata
+            }
+        }
+        if(!hasNegative){
+            viewNumber = 1
+        }
+        hasNegative = false
+        for(nums in datas[dataNumber].second){
+            if(nums < 0.0){
+                toTrueHasNegative()
             }
         }
         lastFocus = number
