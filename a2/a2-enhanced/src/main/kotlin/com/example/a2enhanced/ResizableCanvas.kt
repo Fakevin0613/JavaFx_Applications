@@ -1,11 +1,10 @@
-package com.example.a2basic
+package com.example.a2enhanced
 
 import javafx.beans.InvalidationListener
 import javafx.beans.Observable
 import javafx.scene.canvas.Canvas
 import javafx.scene.paint.Color
 import javafx.scene.shape.ArcType
-import javafx.scene.shape.Rectangle
 import javafx.scene.shape.StrokeLineCap
 import javafx.scene.text.Font
 import kotlin.math.sqrt

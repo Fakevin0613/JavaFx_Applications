@@ -1,4 +1,4 @@
-package com.example.a2basic
+package com.example.a2enhanced
 
 import javafx.beans.InvalidationListener
 import javafx.beans.Observable
@@ -25,14 +25,12 @@ class ToolBars() : HBox() , InvalidationListener {
             keySet.add(key.first)
         }
         val myDrop = ChoiceBox(FXCollections.observableArrayList(keySet))
-        myDrop.prefWidth = 150.0
+        myDrop.prefWidth = 130.0
         myDrop.selectionModel.select(Model.getDataNum())
         myDrop.selectionModel.selectedItemProperty().addListener {
                 _, _, newValue ->
             Model.changeDataNum(newValue)
         }
-
-        val divider1 = Separator()
 
         val myText = TextField()
         myText.promptText = "Data set name"
@@ -50,31 +48,33 @@ class ToolBars() : HBox() , InvalidationListener {
             }
         }
 
-        val divider2 = Separator()
 
         val buttonLine = Button("Line")
-        buttonLine.maxWidth = 75.0
+        buttonLine.maxWidth = 60.0
         setHgrow(buttonLine, Priority.ALWAYS)
         buttonLine.onAction = EventHandler {
             Model.changeViewNumber(1)
         }
+        if(Model.getViewNumber() == 1){
+            buttonLine.isDisable
+        }
 
         val buttonBar = Button("Bar")
-        buttonBar.maxWidth = 75.0
+        buttonBar.maxWidth = 60.0
         setHgrow(buttonBar, Priority.ALWAYS)
         buttonBar.onAction = EventHandler {
             Model.changeViewNumber(2)
         }
 
         val buttonSEM = Button("Bar(SEM)")
-        buttonSEM.maxWidth = 75.0
+        buttonSEM.maxWidth = 60.0
         setHgrow(buttonSEM, Priority.ALWAYS)
         buttonSEM.onAction = EventHandler {
             Model.changeViewNumber(3)
         }
 
         val buttonPie = Button("Pie")
-        buttonPie.maxWidth = 75.0
+        buttonPie.maxWidth = 60.0
         setHgrow(buttonPie, Priority.ALWAYS)
         buttonPie.onAction = EventHandler {
             Model.changeViewNumber(4)
@@ -103,21 +103,45 @@ class ToolBars() : HBox() , InvalidationListener {
         }
 
 
+        val colorScheme = ChoiceBox(
+            FXCollections.observableArrayList("BlackWhite", "Colorful1", "Colorful2"))
+        colorScheme.prefWidth = 100.0
+        colorScheme.selectionModel.select(Model.getColor())
+        colorScheme.selectionModel.selectedItemProperty().addListener {
+                _, _, newValue ->
+            if(newValue == "BlackWhite"){
+                Model.changeColor(0)
+            }
+            else if(newValue == "Colorful1"){
+                Model.changeColor(1)
+            }
+            else if(newValue == "Colorful2"){
+                Model.changeColor(2)
+            }
+        }
+
+
         val toolLeft = HBox()
         toolLeft.apply {
-            padding = Insets(0.0,15.0,0.0,0.0)
+            padding = Insets(0.0,10.0,0.0,0.0)
             alignment = Pos.CENTER
         }
 
         val toolCenter = HBox()
         toolCenter.apply {
-            padding = Insets(0.0,15.0,0.0,15.0)
+            padding = Insets(0.0,10.0,0.0,10.0)
+            alignment = Pos.CENTER
+        }
+
+        val toolCenter2 = HBox()
+        toolCenter2.apply {
+            padding = Insets(0.0,10.0,0.0,10.0)
             alignment = Pos.CENTER
         }
 
         val toolRight = HBox()
         toolRight.apply {
-            padding = Insets(0.0,0.0,0.0,15.0)
+            padding = Insets(0.0,0.0,0.0,10.0)
             alignment = Pos.CENTER_LEFT
         }
 
@@ -125,12 +149,12 @@ class ToolBars() : HBox() , InvalidationListener {
 
         toolCenter.children.addAll(inputBox, buttonSubmit)
         toolLeft.children.addAll(myDrop)
+        toolCenter2.children.addAll(colorScheme)
         toolRight.children.addAll(buttonLine, buttonBar, buttonSEM, buttonPie)
         val toolPane = ToolBar()
         toolPane.items.addAll(toolLeft,
-            divider1,
             toolCenter,
-            divider2,
+            toolCenter2,
             toolRight)
         toolPane.apply {
             padding = Insets(0.0,0.0,1.5,0.0)
