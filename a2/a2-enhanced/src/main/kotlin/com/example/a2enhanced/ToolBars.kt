@@ -25,7 +25,7 @@ class ToolBars() : HBox() , InvalidationListener {
             keySet.add(key.first)
         }
         val myDrop = ChoiceBox(FXCollections.observableArrayList(keySet))
-        myDrop.prefWidth = 130.0
+        myDrop.prefWidth = 100.0
         myDrop.selectionModel.select(Model.getDataNum())
         myDrop.selectionModel.selectedItemProperty().addListener {
                 _, _, newValue ->
@@ -60,24 +60,31 @@ class ToolBars() : HBox() , InvalidationListener {
         }
 
         val buttonBar = Button("Bar")
-        buttonBar.maxWidth = 60.0
+        buttonBar.maxWidth = 65.0
         setHgrow(buttonBar, Priority.ALWAYS)
         buttonBar.onAction = EventHandler {
             Model.changeViewNumber(2)
         }
 
-        val buttonSEM = Button("Bar(SEM)")
-        buttonSEM.maxWidth = 60.0
+        val buttonSEM = Button("BarSEM")
+        buttonSEM.maxWidth = 65.0
         setHgrow(buttonSEM, Priority.ALWAYS)
         buttonSEM.onAction = EventHandler {
             Model.changeViewNumber(3)
         }
 
         val buttonPie = Button("Pie")
-        buttonPie.maxWidth = 60.0
+        buttonPie.maxWidth = 65.0
         setHgrow(buttonPie, Priority.ALWAYS)
         buttonPie.onAction = EventHandler {
             Model.changeViewNumber(4)
+        }
+
+        val buttonAll = Button("ALL")
+        buttonAll.maxWidth = 65.0
+        setHgrow(buttonAll, Priority.ALWAYS)
+        buttonAll.onAction = EventHandler {
+            Model.changeViewNumber(5)
         }
 
         if(Model.getHasNegative()){
@@ -100,6 +107,9 @@ class ToolBars() : HBox() , InvalidationListener {
         }
         else if(Model.getViewNumber() == 4){
             buttonPie.isDisable = true
+        }
+        else if(Model.getViewNumber() == 5){
+            buttonAll.isDisable = true
         }
 
 
@@ -150,7 +160,7 @@ class ToolBars() : HBox() , InvalidationListener {
         toolCenter.children.addAll(inputBox, buttonSubmit)
         toolLeft.children.addAll(myDrop)
         toolCenter2.children.addAll(colorScheme)
-        toolRight.children.addAll(buttonLine, buttonBar, buttonSEM, buttonPie)
+        toolRight.children.addAll(buttonLine, buttonBar, buttonSEM, buttonPie, buttonAll)
         val toolPane = ToolBar()
         toolPane.items.addAll(toolLeft,
             toolCenter,
