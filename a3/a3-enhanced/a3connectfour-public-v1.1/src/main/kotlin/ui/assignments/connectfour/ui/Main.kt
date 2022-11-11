@@ -1,8 +1,9 @@
 package ui.assignments.connectfour.ui
 
 import javafx.animation.AnimationTimer
+import javafx.animation.KeyFrame
 import javafx.animation.ScaleTransition
-import javafx.animation.Transition
+import javafx.animation.Timeline
 import javafx.event.EventHandler
 import javafx.geometry.Insets
 import javafx.scene.Cursor
@@ -19,6 +20,7 @@ import javafx.stage.Stage
 import javafx.util.Duration
 import ui.assignments.connectfour.model.Model
 import ui.assignments.connectfour.model.Player
+import ui.assignments.connectfour.model.Time
 
 
 class Main(stage: Stage): Pane(){
@@ -28,6 +30,8 @@ class Main(stage: Stage): Pane(){
     private val theScene = Scene(this, 360.0 + Model.width * 80, 240.0 + Model.height * 80)
     private var nodes: ArrayList<Circle>
     private var allPieces: ArrayList<Shape>
+    private val player1Time = Time()
+    private val player2Time = Time()
 
     private var insertColumn = -1
     private var inPlace = false
@@ -36,11 +40,45 @@ class Main(stage: Stage): Pane(){
 
     init {
         stage.scene = theScene
-        allPieces = ArrayList()
+        // TIMER FOR EACH ROUND
+        var playerOneTime = Label(player1Time.useTime).apply {
+            font = Font.font("Arial", 30.0)
+            textFill = Color.GREEN
+        }
+        var playerTwoTime = Label(player2Time.useTime).apply {
+            font = Font.font("Arial", 30.0)
+            textFill = Color.BLUE
+        }
+        val timeline1 = Timeline(
+            KeyFrame(
+                Duration.seconds(1.0),
+                {
+                    player1Time.increase()
+                    playerOneTime.text = player1Time.useTime
+                }
+            )
+        )
 
-        // addListener for the Model's components so that the ui can react to their change
+        timeline1.cycleCount = Timeline.INDEFINITE
+        val timeline2 = Timeline(
+            KeyFrame(
+                Duration.seconds(1.0),
+                {
+                    player2Time.increase()
+                    playerTwoTime.text = player2Time.useTime
+                }
+            )
+        )
+        timeline2.cycleCount = Timeline.INDEFINITE
+
+
+
+
+        allPieces = ArrayList()
         Model.onGameWin.addListener {
             _, _, _->
+            timeline1.stop()
+            timeline2.stop()
             val winState = Label("Player ${Model.onGameWin.value} Wins!\n  Game Over!").apply {
                 font = Font.font("Arial")
                 textFill = Color.ORANGE
@@ -60,6 +98,8 @@ class Main(stage: Stage): Pane(){
 
         Model.onGameDraw.addListener {
                 _, _, _->
+            timeline1.stop()
+            timeline2.stop()
             val winState = Label("     Draw!\nGame Over!").apply {
                 font = Font.font("Arial")
                 textFill = Color.GREY
@@ -101,6 +141,8 @@ class Main(stage: Stage): Pane(){
 
         Model.onNextPlayer.addListener { _, _, new ->
             if(new == Player.ONE){
+                timeline1.play()
+                timeline2.stop()
                 currentPlayer = Player.ONE
                 val newPiece = Circle(
                     0.0,
@@ -117,6 +159,8 @@ class Main(stage: Stage): Pane(){
                 setDragListeners(newPiece)
             }
             else if(new == Player.TWO){
+                timeline1.stop()
+                timeline2.play()
                 currentPlayer = Player.TWO
                 val newPiece = Circle(
                     0.0,
@@ -134,13 +178,18 @@ class Main(stage: Stage): Pane(){
             }
         }
 
-        // components of the game board
         val players = BorderPane().apply { padding = Insets(10.0, 10.0, 10.0, 10.0) }
         players.prefWidthProperty().bind(this.widthProperty())
         playerOne.font = Font.font("Arial", 30.0)
         playerTwo.font = Font.font("Arial", 30.0)
-        players.left = playerOne
-        players.right = playerTwo
+        playerOne.padding = Insets(0.0, 30.0, 0.0, 0.0)
+        playerTwo.padding = Insets(0.0, 0.0, 0.0, 30.0)
+        val theLeft = HBox()
+        theLeft.children.addAll(playerOne, playerOneTime)
+        val theRight = HBox()
+        theRight.children.addAll(playerTwoTime, playerTwo)
+        players.left = theLeft
+        players.right = theRight
         children.add(players)
 
         val startButton = Rectangle(400.0, 100.0, Color.AQUA).apply {
@@ -190,7 +239,6 @@ class Main(stage: Stage): Pane(){
     }
 
 
-    //drag events for the pieces
     private fun setDragListeners(shape: Circle) {
         // record a delta distance for the drag and drop operation.
         var clickX = 0.0
@@ -227,6 +275,7 @@ class Main(stage: Stage): Pane(){
                         }
                     }
                 }
+
                 timer.start()
             }
         }
@@ -251,7 +300,6 @@ class Main(stage: Stage): Pane(){
         }
     }
 
-    // Check if the pieces are above the grid and force them to fit into position
     private fun checkShapeIntersection(shape: Circle) {
         inPlace = false
         insertColumn = -1
@@ -268,7 +316,6 @@ class Main(stage: Stage): Pane(){
         }
     }
 
-    // Check if the pieces collide with one another, the idea is inspired from public CS349 Collision project
     private fun checkPiecesIntersection(shape: Shape): Boolean {
         for (s : Shape in allPieces) {
             if (s != shape) {
