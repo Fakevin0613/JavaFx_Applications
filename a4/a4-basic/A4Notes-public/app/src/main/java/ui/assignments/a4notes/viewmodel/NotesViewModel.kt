@@ -1,5 +1,6 @@
 package ui.assignments.a4notes.viewmodel
 
+import android.util.Log
 import androidx.databinding.Observable
 import androidx.databinding.Observable.OnPropertyChangedCallback
 import androidx.databinding.ObservableArrayList
@@ -22,6 +23,7 @@ class NotesViewModel : ViewModel() {
 
     // list of all currently visible / displayed notes
     private val notes = MutableLiveData<MutableList<MutableLiveData<VMNote>>>(mutableListOf())
+    private val archivedNotes = MutableLiveData<MutableList<MutableLiveData<VMNote>>>(mutableListOf())
 
     // UI state indicating if archived notes should be displayed
     private val viewArchived = MutableLiveData(false)
@@ -55,6 +57,15 @@ class NotesViewModel : ViewModel() {
                         }
                     }
                 }
+
+                archivedNotes.value?.find { it.value?.id == propertyId }?.apply {// find MVNote in notes
+                    modelNote as Model.ModelNote
+                    this.value = VMNote(modelNote.id, modelNote.title, modelNote.content, modelNote.important, modelNote.archived)
+                    // if not, apply changes from ModelNote to MVNote
+                    archivedNotes.value = archivedNotes.value.apply {
+                        this?.sortWith { a, b -> model.compareNotes(a?.value!!.id, b?.value!!.id) }
+                    }
+                }
             }
         }
 
@@ -72,11 +83,26 @@ class NotesViewModel : ViewModel() {
                         this?.add(MutableLiveData(VMNote(addedNote)))
                         this?.sortWith { p0, p1 -> model.compareNotes(p0?.value!!.id, p1?.value!!.id) }
                     }
+
+                    archivedNotes.value = archivedNotes.value.apply {
+                        this?.add(MutableLiveData(VMNote(addedNote)))
+                        this?.sortWith { p0, p1 -> model.compareNotes(p0?.value!!.id, p1?.value!!.id) }
+                    }
+                }
+                else if(addedNote?.archived?.not() == false){
+                    archivedNotes.value = archivedNotes.value.apply {
+                        this?.add(MutableLiveData(VMNote(addedNote)))
+                        this?.sortWith { p0, p1 -> model.compareNotes(p0?.value!!.id, p1?.value!!.id) }
+                    }
                 }
             }
             override fun onItemRangeMoved(sender: ObservableArrayList<Model.ModelNote>?, fromPosition: Int, toPosition: Int, itemCount: Int) {  }
             override fun onItemRangeRemoved(sender: ObservableArrayList<Model.ModelNote>?, positionStart: Int, itemCount: Int) {
                 notes.value = notes.value!!.apply {
+                    removeIf { mvnote -> (sender?.find { modelnote -> modelnote.id == mvnote.value!!.id }) == null }
+                }
+
+                archivedNotes.value = archivedNotes.value!!.apply {
                     removeIf { mvnote -> (sender?.find { modelnote -> modelnote.id == mvnote.value!!.id }) == null }
                 }
             }
@@ -91,10 +117,29 @@ class NotesViewModel : ViewModel() {
      * @see notes
      */
     fun getNotes() : LiveData<MutableList<LiveData<VMNote>>> {
-        return notes as LiveData<MutableList<LiveData<VMNote>>>
+        return if(viewArchived.value == true) archivedNotes as LiveData<MutableList<LiveData<VMNote>>>
+        else notes as LiveData<MutableList<LiveData<VMNote>>>
     }
 
     // The following methods are missing:
     // * Functions to get / set the value of viewArchived.
+    fun toggleViewArchived(){
+        viewArchived.value?.let {
+            viewArchived.value = !it
+        }
+    }
+
+    fun getViewArchived(): MutableLiveData<Boolean> {
+        return viewArchived
+    }
     // * Functions to forward requests from the View to the Model.
+
+    fun archiveANote(id: Int){
+        model.updateNoteArchived(id, true)
+        model.updateNoteImportant(id, false)
+    }
+
+    fun deleteANote(id: Int){
+        model.removeNote(id)
+    }
 }

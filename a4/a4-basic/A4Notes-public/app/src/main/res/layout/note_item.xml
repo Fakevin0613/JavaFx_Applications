@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/note_item"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:orientation="horizontal"
+>
+    <LinearLayout
+            android:layout_weight="9"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+        <TextView
+                android:id="@+id/title_string"
+                android:text="title"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="4dp"
+                android:layout_weight="2"
+                android:textStyle="bold"/>
+        <TextView
+                android:id="@+id/content_string"
+                android:text="content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="4dp"
+                android:layout_weight="1"
+                android:maxLines="2"
+                android:ellipsize="end"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="5"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+        <Button
+                android:id="@+id/archived_button"
+                android:text="A"
+                android:textColor="@color/white"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="8dp"/>
+        <Button
+                android:id="@+id/delete_button"
+                android:text="D"
+                android:textColor="@color/white"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="8dp"/>
+
+    </LinearLayout>
+
+</LinearLayout>
