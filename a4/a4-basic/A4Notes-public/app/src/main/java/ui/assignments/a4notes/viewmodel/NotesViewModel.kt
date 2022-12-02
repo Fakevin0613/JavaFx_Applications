@@ -8,6 +8,7 @@ import androidx.lifecycle.*
 import androidx.lifecycle.viewmodel.CreationExtras
 import ui.assignments.a4notes.model.Model
 
+@Suppress("UNCHECKED_CAST")
 class NotesViewModel : ViewModel() {
 
     /**

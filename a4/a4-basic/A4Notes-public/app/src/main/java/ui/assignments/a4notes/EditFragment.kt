@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import ui.assignments.a4notes.viewmodel.NotesViewModel
 
+@Suppress("NAME_SHADOWING")
 class EditFragment : Fragment(){
 
     override fun onCreateView(
@@ -21,7 +22,7 @@ class EditFragment : Fragment(){
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.edit_screen, container, false)
-        val id = this.arguments?.getInt("id");
+        val id = this.arguments?.getInt("id")
         val position = this.arguments?.getInt("position")
         val myVM: NotesViewModel by activityViewModels { NotesViewModel.Factory }
 

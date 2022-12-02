@@ -1,5 +1,6 @@
 package ui.assignments.a4notes
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +15,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import ui.assignments.a4notes.viewmodel.NotesViewModel
 
 class MainFragment : Fragment() {
+    @SuppressLint("UseSwitchCompatOrMaterialCode", "NotifyDataSetChanged")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
