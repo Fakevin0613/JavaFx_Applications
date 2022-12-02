@@ -3,13 +3,13 @@ package ui.assignments.a4notes
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.Switch
 import android.widget.TextView
+import androidx.activity.addCallback
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import ui.assignments.a4notes.viewmodel.NotesViewModel
@@ -102,6 +102,14 @@ class EditFragment : Fragment(){
             if (archived != null) {
                 view.findViewById<Switch>(R.id.Edit_Archived).isChecked = archived
             }
+        }
+
+        //The back-button navigates back to the main screen
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            val activity: AppCompatActivity = view.context as AppCompatActivity
+            val mainFragment: Fragment = MainFragment()
+            val fm = activity.supportFragmentManager.beginTransaction()
+            fm.replace(R.id.Frame_Container, mainFragment).addToBackStack(null).commit()
         }
 
         return view

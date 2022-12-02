@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <LinearLayout android:id="@+id/add_top"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:gravity="center"
+                  android:orientation="horizontal"
+    >
+        <EditText
+            android:id="@+id/Add_Title"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:inputType="text"
+            android:backgroundTint="@color/light_blue_600"
+            android:hint="Title"
+            android:layout_weight="8"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+
+    />
+        <Switch
+                android:text="Important"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/Add_Important"
+                tools:ignore="RtlSymmetry,UseSwitchCompatOrMaterialXml"/>
+    </LinearLayout>
+
+    <EditText
+            android:id="@+id/Add_Content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start|top"
+            android:inputType="textMultiLine"
+            android:backgroundTint="@color/light_blue_600"
+            android:hint="Content"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="8dp"
+            android:layout_above="@id/Add_submit"
+            android:layout_below="@id/add_top"
+
+    />
+
+    <Button android:id="@+id/Add_submit"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:text="Submit"/>
+
+
+</RelativeLayout>

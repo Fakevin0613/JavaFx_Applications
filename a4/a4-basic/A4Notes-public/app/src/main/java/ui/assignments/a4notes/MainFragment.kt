@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import ui.assignments.a4notes.viewmodel.NotesViewModel
 
 class MainFragment : Fragment() {
@@ -37,6 +38,13 @@ class MainFragment : Fragment() {
             }
         }
 
+        val addButton: FloatingActionButton = view.findViewById(R.id.floatingActionButton)
+        addButton.setOnClickListener {
+            val activity: AppCompatActivity = it.context as AppCompatActivity
+            val addFragment: Fragment = AddFragment()
+            val fm = activity.supportFragmentManager.beginTransaction()
+            fm.replace(R.id.Frame_Container, addFragment).addToBackStack(null).commit()
+        }
 
         return view
     }

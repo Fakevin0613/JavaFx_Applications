@@ -1,6 +1,5 @@
 package ui.assignments.a4notes.viewmodel
 
-import android.util.Log
 import androidx.databinding.Observable
 import androidx.databinding.Observable.OnPropertyChangedCallback
 import androidx.databinding.ObservableArrayList
@@ -145,5 +144,9 @@ class NotesViewModel : ViewModel() {
 
     fun updateContent(id: Int, content: String){
         model.updateNoteContent(id, content)
+    }
+
+    fun addNote(title: String, content: String, important: Boolean){
+        model.addNote(title, content, important)
     }
 }

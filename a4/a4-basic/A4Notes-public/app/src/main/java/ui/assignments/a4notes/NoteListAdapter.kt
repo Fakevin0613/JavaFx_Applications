@@ -3,7 +3,6 @@ package ui.assignments.a4notes
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -53,6 +52,14 @@ class NoteListAdapter(private val viewModel: NotesViewModel, private val activit
 
                 holder.title.text = viewModel.getNotes().value?.get(position)?.value?.title ?: "title fails to load"
                 holder.content.text = viewModel.getNotes().value?.get(position)?.value?.content ?: "content fails to load"
+
+                if(holder.title.text == ""){
+                        holder.title.text = "Title"
+                }
+
+                if(holder.content.text == ""){
+                        holder.content.text = "Content"
+                }
 
                 holder.archivedButton.setOnClickListener{
                         _: View ->
