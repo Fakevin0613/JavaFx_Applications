@@ -2,17 +2,20 @@ package ui.assignments.a4notes
 
 import android.annotation.SuppressLint
 import android.graphics.Color
+import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import ui.assignments.a4notes.viewmodel.NotesViewModel
 
-@SuppressLint("NotifyDataSetChanged")
-class NoteListAdapter(private val viewModel: NotesViewModel, private val activity: MainActivity): RecyclerView.Adapter<NoteListAdapter.ViewHolder>(){
+class NoteListAdapter(private val viewModel: NotesViewModel, private val activity: AppCompatActivity): RecyclerView.Adapter<NoteListAdapter.ViewHolder>(){
 
         init{
                 viewModel.getNotes().observe(activity){
@@ -29,13 +32,15 @@ class NoteListAdapter(private val viewModel: NotesViewModel, private val activit
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-                return ViewHolder( LayoutInflater.from(parent.context).inflate(R.layout.note_item, parent, false))
+                val v: View = LayoutInflater.from(parent.context).inflate(R.layout.note_item, parent, false)
+                return ViewHolder(v)
         }
 
         override fun getItemCount(): Int {
                 return viewModel.getNotes().value?.size ?: 0
         }
 
+        @SuppressLint("ResourceType")
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
                 holder.card.setBackgroundColor(Color.parseColor("#FFFFFF"))
                 if(viewModel.getNotes().value?.get(position)?.value?.important == true){
@@ -51,7 +56,14 @@ class NoteListAdapter(private val viewModel: NotesViewModel, private val activit
 
                 holder.archivedButton.setOnClickListener{
                         _: View ->
-                        viewModel.getNotes().value?.get(position)?.value?.id?.let { it1 -> viewModel.archiveANote(it1) }
+                        viewModel.getNotes().value?.get(position)?.value?.id?.let { it1 ->
+                                if(viewModel.getNotes().value?.get(position)?.value?.archived == false){
+                                        viewModel.archiveANote(it1)
+                                }
+                                else{
+                                        viewModel.unArchiveANote(it1)
+                                }
+                        }
                 }
 
                 holder.deleteButton.setOnClickListener {
@@ -59,6 +71,33 @@ class NoteListAdapter(private val viewModel: NotesViewModel, private val activit
                         if(viewModel.getNotes().value?.get(position)?.value?.important == false){
                                 viewModel.getNotes().value?.get(position)?.value?.id?.let { it1 -> viewModel.deleteANote(it1) }
                         }
+                }
+
+                val param = holder.itemView.layoutParams
+                if(viewModel.getNotes().value?.get(position)?.value?.archived == true && viewModel.getViewArchived().value == false){
+                        param.height = 0
+                        param.width = 0
+                        holder.itemView.visibility = View.GONE
+                }
+                else{
+                        param.height = LinearLayout.LayoutParams.WRAP_CONTENT
+                        param.width = LinearLayout.LayoutParams.MATCH_PARENT
+                        holder.itemView.visibility = View.VISIBLE
+                }
+                holder.itemView.layoutParams = param
+
+                holder.card.setOnClickListener {
+                        val activity: AppCompatActivity = it.context as AppCompatActivity
+                        val bundle = Bundle()
+                        val theID = viewModel.getNotes().value?.get(position)?.value?.id
+                        if (theID != null) {
+                                bundle.putInt("id", theID)
+                        }
+                        bundle.putInt("position", position)
+                        val editFragment: Fragment = EditFragment()
+                        editFragment.arguments = bundle
+                        val fm = activity.supportFragmentManager.beginTransaction()
+                        fm.replace(R.id.Frame_Container, editFragment).addToBackStack(null).commit()
                 }
         }
 }

@@ -12,27 +12,13 @@ import ui.assignments.a4notes.viewmodel.NotesViewModel
 
 class MainActivity : AppCompatActivity() {
     private lateinit var adapter: NoteListAdapter
-    @SuppressLint("UseSwitchCompatOrMaterialCode")
+    @SuppressLint("UseSwitchCompatOrMaterialCode", "NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val myVM : NotesViewModel by viewModels { NotesViewModel.Factory }
 
-        adapter = NoteListAdapter(myVM,this)
-        val recyclerList = findViewById<View>(R.id.recyclerList) as RecyclerView
-        recyclerList.layoutManager = LinearLayoutManager(this)
-        recyclerList.adapter = adapter
-
-        val toggle: Switch = findViewById(R.id.showArchivedSwitch)
-        toggle.isChecked = myVM.getViewArchived().value == true
-        toggle.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                myVM.toggleViewArchived()
-                adapter.notifyDataSetChanged()
-            } else {
-                myVM.toggleViewArchived()
-                adapter.notifyDataSetChanged()
-            }
-        }
+        val mainFragment = MainFragment()
+        val fm = this.supportFragmentManager.beginTransaction()
+        fm.replace(R.id.Frame_Container, mainFragment, "main_fragment").commit()
     }
 }
