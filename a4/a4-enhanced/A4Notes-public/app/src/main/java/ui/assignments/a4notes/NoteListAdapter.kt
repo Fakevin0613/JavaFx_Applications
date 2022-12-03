@@ -91,6 +91,16 @@ class NoteListAdapter(private val viewModel: NotesViewModel, private val activit
                         param.width = LinearLayout.LayoutParams.MATCH_PARENT
                         holder.itemView.visibility = View.VISIBLE
                 }
+
+                val keyword = viewModel.getKeyWord().value?.uppercase()
+                if(keyword != ""){
+                        if(keyword?.let { viewModel.getNotes().value?.get(position)?.value?.title?.uppercase()?.contains(it) == true } == false){
+                                param.height = 0
+                                param.width = 0
+                                holder.itemView.visibility = View.GONE
+                        }
+                }
+
                 holder.itemView.layoutParams = param
 
                 holder.card.setOnClickListener {

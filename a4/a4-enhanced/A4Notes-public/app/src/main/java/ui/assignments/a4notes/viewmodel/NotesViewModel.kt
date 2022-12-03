@@ -27,6 +27,8 @@ class NotesViewModel : ViewModel() {
     // UI state indicating if archived notes should be displayed
     private val viewArchived = MutableLiveData(false)
 
+    private val keyWord = MutableLiveData("")
+
     companion object {
         val Factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel>
@@ -114,6 +116,14 @@ class NotesViewModel : ViewModel() {
 
     fun getViewArchived(): MutableLiveData<Boolean> {
         return viewArchived
+    }
+
+    fun getKeyWord(): MutableLiveData<String> {
+        return keyWord
+    }
+
+    fun updateKeyWord(input: String){
+        keyWord.value = input
     }
     // * Functions to forward requests from the View to the Model.
 
