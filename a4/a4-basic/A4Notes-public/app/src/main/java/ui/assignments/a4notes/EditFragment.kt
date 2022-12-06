@@ -73,35 +73,32 @@ class EditFragment : Fragment(){
 
         view.findViewById<Switch>(R.id.Edit_Archived).setOnClickListener{
                 _: View ->
-            if (position != null) {
-                myVM.getNotes().value?.get(position)?.value?.id?.let { it1 ->
-                    if(myVM.getNotes().value?.get(position)?.value?.archived == false){
-                        myVM.archiveANote(it1)
-                    } else{
-                        myVM.unArchiveANote(it1)
-                    }
+            if(view.findViewById<Switch>(R.id.Edit_Archived).isChecked){
+                if (id != null) {
+                    myVM.archiveANote(id)
+                    view.findViewById<Switch>(R.id.Edit_Important).isChecked = false
                 }
             }
-            val important = position?.let { myVM.getNotes().value?.get(it)?.value?.important }
-            if (important != null) {
-                view.findViewById<Switch>(R.id.Edit_Important).isChecked = important
+            else{
+                if (id != null) {
+                    myVM.unArchiveANote(id)
+                }
             }
+
         }
 
         view.findViewById<Switch>(R.id.Edit_Important).setOnClickListener{
                 _: View ->
-            if (position != null) {
-                myVM.getNotes().value?.get(position)?.value?.id?.let { it1 ->
-                    if(myVM.getNotes().value?.get(position)?.value?.important == false){
-                        myVM.importantNote(it1)
-                    } else{
-                        myVM.unImportantNote(it1)
-                    }
+            if(view.findViewById<Switch>(R.id.Edit_Important).isChecked){
+                if (id != null) {
+                    myVM.importantNote(id)
                 }
+                view.findViewById<Switch>(R.id.Edit_Archived).isChecked = false
             }
-            val archived = position?.let { myVM.getNotes().value?.get(it)?.value?.archived }
-            if (archived != null) {
-                view.findViewById<Switch>(R.id.Edit_Archived).isChecked = archived
+            else{
+                if (id != null) {
+                    myVM.unImportantNote(id)
+                }
             }
         }
 
